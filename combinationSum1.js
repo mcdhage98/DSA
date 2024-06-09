@@ -5,8 +5,13 @@ let target = 3;
 ans = [[1, 1, 1], [1, 2], 3];
 */
 
-let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+/*let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 let target = 12;
+*/
+
+let arr = [1, 2, 3];
+let target = 3;
+//ans = [[1, 1, 1], [1, 2], 3];
 
 function combinationSum(arr, target) {
   let result = [];
