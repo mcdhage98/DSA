@@ -5,13 +5,8 @@ let target = 3;
 ans = [[1, 1, 1], [1, 2], 3];
 */
 
-/*let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 let target = 12;
-*/
-
-let arr = [1, 2, 3];
-let target = 3;
-//ans = [[1, 1, 1], [1, 2], 3];
 
 function combinationSum(arr, target) {
   let result = [];
@@ -20,11 +15,12 @@ function combinationSum(arr, target) {
 }
 
 function findCombination(arr, ind, target, ds, result) {
-  if (ind == arr?.length - 1) {
-    if (target == 0) {
-      result.push([...ds]);
-      return result;
-    }
+  if (target == 0) {
+    result.push([...ds]);
+    return result;
+  }
+  if (arr[ind] > target) {
+    return;
   }
   if (ind <= arr?.length - 1 && target >= 0) {
     ds.push(arr[ind]);
