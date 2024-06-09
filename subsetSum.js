@@ -4,7 +4,6 @@ let res = [];
 function subSetSum(arr, index, sum, result) {
   if (index > arr.length - 1) {
     result.push(sum);
-    return;
   }
 
   subSetSum(arr, index + 1, sum + arr[index], result);
