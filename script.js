@@ -1,3 +1,5 @@
+//preorder dfs space complexity o(n) as tree can be skewed to left
+// time complexity is also o(n)
 class Node {
   constructor(value) {
     this.value = value;
@@ -40,42 +42,28 @@ n4.setRight(n9);
 n5.setLeft(n10);
 n5.setRight(n11);
 
-// Function to print the
-// elements of an array
-function printArray(arr) {
-  // Iterate through the
-  // array and print each element
-  for (let num of arr) {
-    console.log(num + " ");
-  }
-  console.log("\n");
-}
-
-function solution(root) {
-  if (root?.value == null) {
+function preOrderTraversal(node) {
+  let ans = [];
+  if (node?.value == null) {
     return;
   }
-  let q = [];
-  q.push(root);
-  let ans = [];
-  while (q.length > 0) {
-    let level = [];
-    let size = q.length;
-
+  let stack = [];
+  stack.push(node);
+  while (stack.length > 0) {
+    let size = stack.length;
     for (let i = 0; i < size; i++) {
-      let el = q.shift();
-      level.push(el.value);
-      if (el?.left) {
-        q.push(el.left);
-      }
+      let el = stack.pop();
+      ans.push(el.value);
       if (el?.right) {
-        q.push(el.right);
+        stack.push(el.right);
+      }
+      if (el?.left) {
+        stack.push(el.left);
       }
     }
-    ans.push(level);
   }
   return ans;
 }
 
-let ans = solution(n1);
-printArray(ans);
+let ans = preOrderTraversal(n1);
+console.log(ans);
