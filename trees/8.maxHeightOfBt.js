@@ -41,7 +41,7 @@ n5.setLeft(n10);
 n5.setRight(n11);
 
 function maxHeight(node) {
-  if (!node?.value) {
+  if (node?.value == 0) {
     return 0;
   } else {
     let lhs = maxHeight(node?.left);
