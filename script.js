@@ -1,3 +1,5 @@
+//space complexity o(n) as tree can be skewed to left
+// time complexity is also o(n)
 class Node {
   constructor(value) {
     this.value = value;
@@ -40,4 +42,13 @@ n4.setRight(n9);
 n5.setLeft(n10);
 n5.setRight(n11);
 
-console.log(n1.left.left.value);
+function preOrderTraversal(node) {
+  if (node?.value == null) {
+    return;
+  }
+  preOrderTraversal(node?.left);
+  console.log(node?.value);
+  preOrderTraversal(node?.right);
+}
+
+preOrderTraversal(n1);

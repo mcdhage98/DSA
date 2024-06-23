@@ -40,4 +40,4 @@ n4.setRight(n9);
 n5.setLeft(n10);
 n5.setRight(n11);
 
-console.log(n1.left.left.value);
+
