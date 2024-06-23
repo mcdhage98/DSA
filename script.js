@@ -1,131 +1,59 @@
-/*function solveNQueens(n) {
-  let board = new Array(n).fill(null).map(() => new Array(n).fill('.'));
-  let res = [];
-  dfs(0, board, res);
-  return res;
-}
-
-function validate(board, row, col) {
-  let duprow = row;
-  let dupcol = col;
-
-  while (row >= 0 && col >= 0) {
-      if (board[row][col] === 'Q') return false;
-      row--;
-      col--;
-  }
-
-  row = duprow;
-  col = dupcol;
-  while (col >= 0) {
-      if (board[row][col] === 'Q') return false;
-      col--;
-  }
-
-  row = duprow;
-  col = dupcol;
-  while (col >= 0 && row < board.length) {
-      if (board[row][col] === 'Q') return false;
-      col--;
-      row++;
-  }
-  return true;
-}
-
-function dfs(col, board, res) {
-  if (col === board.length) {
-      res.push(construct(board));
-      return;
-  }
-
-  for (let row = 0; row < board.length; row++) {
-      if (validate(board, row, col)) {
-          board[row][col] = 'Q';
-          dfs(col + 1, board, res);
-          board[row][col] = '.';
+function solveSudoku(board) {
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      if (board[i][j] == ".") {
+        for (let val = 1; val <= 9; val++) {
+          let char = val.toString();
+          if (checkValid(i, j, board, char)) {
+            board[i][j] = val;
+            if (solveSudoku(board)) {
+              return true;
+            } else {
+              board[i][j] = ".";
+            }
+          }
+        }
+        return false;
       }
-  }
-}
-
-function construct(board) {
-  let res = [];
-  for (let i = 0; i < board.length; i++) {
-      res.push(board[i].join(''));
-  }
-  return res;
-}
-
-// Test the code
-const N = 4;
-const queen = solveNQueens(N);
-let i = 1;
-queen.forEach(arrangement => {
-  console.log(`Arrangement ${i}`);
-  arrangement.forEach(row => console.log(row));
-  console.log();
-  i += 1;
-});
-
-*/
-
-function constructBoard(board) {
-  return board.map((b) => b.join(""));
-}
-
-function validate(board, row, col) {
-  let dupRow = row;
-  let dupCol = col;
-
-  while (row >= 0 && col >= 0) {
-    if (board[row][col] == "Q") {
-      return false;
     }
-    row--;
-    col--;
   }
-  row = dupRow;
-  col = dupCol;
-
-  while (col >= 0) {
-    if (board[row][col] == "Q") {
-      return false;
-    }
-    col--;
-  }
-
-  row = dupRow;
-  col = dupCol;
-
-  while (col >= 0 && row < board.length) {
-    if (board[row][col] == "Q") {
-      return false;
-    }
-    col--;
-    row++;
-  }
-
   return true;
 }
-function dfs(col, board, res) {
-  if (col == n) {
-    res.push(constructBoard(board));
-  }
 
-  for (let row = 0; row < board.length; row++) {
-    if (validate(board, row, col)) {
-      board[row][col] = "Q";
-      dfs(col + 1, board, res);
-      board[row][col] = ".";
-    }
+function checkValid(row, col, board, c) {
+  for (let i = 0; i < 9; i++) {
+    if (board[i][col] === c) return false;
+
+    if (board[row][i] === c) return false;
+
+    if (
+      board[3 * Math.floor(row / 3) + Math.floor(i / 3)][
+        3 * Math.floor(col / 3) + (i % 3)
+      ] === c
+    )
+      return false;
+  }
+  return true;
+}
+
+function main() {
+  let board = [
+    ["9", "5", "7", ".", "1", "3", ".", "8", "4"],
+    ["4", "8", "3", ".", "5", "7", "1", ".", "6"],
+    [".", "1", "2", ".", "4", "9", "5", "3", "7"],
+    ["1", "7", ".", "3", ".", "4", "9", ".", "2"],
+    ["5", ".", "4", "9", "7", ".", "3", "6", "."],
+    ["3", ".", "9", "5", ".", "8", "7", ".", "1"],
+    ["8", "4", "5", "7", "9", ".", "6", "1", "3"],
+    [".", "9", "1", ".", "3", "6", ".", "7", "5"],
+    ["7", ".", "6", "1", "8", "5", "4", ".", "9"],
+  ];
+
+  solveSudoku(board);
+
+  for (let i = 0; i < 9; i++) {
+    console.log(board[i].join(" "));
   }
 }
 
-function nQueensSol(n) {
-  let board = new Array(n).fill(".").map((a) => new Array(n).fill("."));
-  let res = [];
-  dfs(0, board, res);
-  res.forEach((res) => console.log(res));
-}
-
-const n = 4;
-nQueensSol(n);
+main();
