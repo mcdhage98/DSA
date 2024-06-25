@@ -1,4 +1,4 @@
-//self explanatory max path sum
+//do any traversal preorder, post order, inorder of both tress should be same
 
 class Node {
   constructor(value) {
@@ -44,24 +44,45 @@ n4.setRight(n9);
 n5.setLeft(n10);
 n5.setRight(n11);
 
-let solution = (root, sum) => {
-  if (!root?.value) {
-    return 0;
-  }
-  let leftValue = solution(root?.left, sum);
-  let rightValue = solution(root?.right, sum);
-  console.log(
-    "root?.value, leftVal, rightVal",
-    root.value,
-    leftValue,
-    rightValue
-  );
-  sum.val = Math.max(sum.val, root.value + leftValue + rightValue);
-  console.log("sum.val", sum.val);
-  return root.value + Math.max(leftValue, rightValue);
-};
-let sum = {
-  val: 0,
-};
-solution(n1, sum);
-console.log(sum.val);
+////second tree
+let p1 = new Node(1);
+let p2 = new Node(2);
+let p3 = new Node(3);
+let p4 = new Node(4);
+let p5 = new Node(5);
+let p6 = new Node(6);
+let p7 = new Node(7);
+let p8 = new Node(8);
+let p9 = new Node(9);
+let p10 = new Node(10);
+let p11 = new Node(11);
+let p12 = new Node(12);
+let p13 = new Node(13);
+
+p1.setLeft(p2);
+p1.setRight(p3);
+
+p2.setLeft(p4);
+p2.setRight(p5);
+
+p3.setLeft(p6);
+p3.setRight(p7);
+
+p4.setLeft(p8);
+p4.setRight(p9);
+
+p5.setLeft(p10);
+p5.setRight(p11);
+
+function check(n, p) {
+  if (!n?.value && !p?.value) {
+    return n == p;
+  } else
+    return (
+      n?.value == p?.value &&
+      check(n?.left, p?.left) &&
+      check(n?.right, p?.right)
+    );
+}
+
+console.log(check(n1, p1));
