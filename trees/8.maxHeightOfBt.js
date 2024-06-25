@@ -51,3 +51,7 @@ function maxHeight(node) {
 }
 
 console.log(maxHeight(n1));
+
+
+//sc - o(n) skewed tree
+//t(n) -o(n)

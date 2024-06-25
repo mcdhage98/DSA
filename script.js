@@ -1,3 +1,9 @@
+/*
+Balanced BT = for every node , abs(height(left) - height(right)) <=1
+Algo
+return -1 from the function if its not balanced even for recursive calls;
+or height is its balanced
+*/
 class Node {
   constructor(value) {
     this.value = value;
@@ -24,6 +30,8 @@ let n8 = new Node(8);
 let n9 = new Node(9);
 let n10 = new Node(10);
 let n11 = new Node(11);
+let n12 = new Node(12);
+let n13 = new Node(13);
 
 n1.setLeft(n2);
 n1.setRight(n3);
@@ -40,14 +48,29 @@ n4.setRight(n9);
 n5.setLeft(n10);
 n5.setRight(n11);
 
-function maxHeight(node) {
-  if (!node?.value) {
-    return 0;
-  } else {
-    let lhs = maxHeight(node?.left);
-    let rhs = maxHeight(node?.right);
-    return 1 + Math.max(lhs, rhs);
-  }
-}
+/*
+uncomment to make the tree unbalanced
+n10.setLeft(n11);
+n11.setLeft(n12);
+*/
 
-console.log(maxHeight(n1));
+let solution = (root) => {
+  if (!root?.value) {
+    return 0;
+  }
+  let leftHeight = solution(root?.left);
+  let rightHeight = solution(root?.right);
+  if (leftHeight == -1) {
+    return -1;
+  }
+  if (rightHeight == -1) {
+    return -1;
+  }
+  let height = Math.abs(leftHeight - rightHeight);
+  if (height > 1) {
+    return -1;
+  }
+  return 1 + Math.max(leftHeight, rightHeight);
+};
+
+console.log(solution(n1));
