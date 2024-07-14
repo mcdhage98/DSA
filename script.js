@@ -1,3 +1,6 @@
+//boundary traversal tc o(n) sc o(n)
+// left traversal + leave nodes + reverse of right traversal
+
 class Node {
   constructor(value) {
     this.value = value;
@@ -40,37 +43,71 @@ n4.setRight(n9);
 n5.setLeft(n10);
 n5.setRight(n11);
 
-function zigZagTraversal(node) {
-  if (!node?.value) {
-    return;
+function boundaryTraversal(root) {
+  debugger;
+  let rs = [];
+  if (!root?.value) {
+    return rs;
   }
-  let res = [];
-  let q = [];
-  let rightToLeftFlag = false;
-  q.push(node);
-  while (q.length > 0) {
-    let size = q.length;
-    let ds = [];
-    for (let i = 0; i < size; i++) {
-      let el = q.shift();
-      if (el?.left) {
-        q.push(el?.left);
-      }
-      if (el?.right) {
-        q.push(el?.right);
-      }
+  if (root?.value) {
+    rs.push(root?.value);
+  }
+  leftTraversal(root, rs);
+  addLeaves(root, rs);
+  rightTraversal(root, rs);
 
-      if (rightToLeftFlag) {
-        ds.unshift(el?.value);
-      } else {
-        ds.push(el?.value);
-      }
-    }
-    rightToLeftFlag = !rightToLeftFlag;
-    res.push(ds);
-  }
-  return res;
+  console.log(rs);
 }
 
-const res = zigZagTraversal(n1);
-console.log(res);
+function isLeaf(node) {
+  if (node && !node?.left && !node?.right) {
+    return true;
+  } else return false;
+}
+function leftTraversal(root, rs) {
+  let cur = root?.left;
+  while (cur) {
+    // If the current node is not a leaf, add its value to the result
+    if (!isLeaf(cur)) {
+      rs.push(cur.value);
+    }
+    // Move to the left child if it exists, otherwise move to the right child
+    if (cur.left) {
+      cur = cur.left;
+    } else {
+      cur = cur.right;
+    }
+  }
+}
+
+function addLeaves(root, rs) {
+  if (!root?.value) {
+    return;
+  }
+  if (isLeaf(root)) {
+    rs.push(root?.value);
+  }
+  addLeaves(root?.left, rs);
+  addLeaves(root?.right, rs);
+}
+
+function rightTraversal(root, rs) {
+  let cur = root?.right;
+  let temp = [];
+  while (cur) {
+    // If the current node is not a leaf, add its value to the result
+    if (!isLeaf(cur)) {
+      temp.push(cur.value);
+    }
+    // Move to the left child if it exists, otherwise move to the right child
+    if (cur?.right) {
+      cur = cur.right;
+    } else {
+      cur = cur?.left;
+    }
+  }
+  rs.push(...temp.reverse());
+}
+
+console.log("sdsd");
+boundaryTraversal(n1);
