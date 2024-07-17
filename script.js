@@ -1,6 +1,4 @@
-//boundary traversal tc o(n) sc o(n)
-// left traversal + leave nodes + reverse of right traversal
-
+//https://takeuforward.org/data-structure/vertical-order-traversal-of-binary-tree/
 class Node {
   constructor(value) {
     this.value = value;
@@ -43,71 +41,42 @@ n4.setRight(n9);
 n5.setLeft(n10);
 n5.setRight(n11);
 
-function boundaryTraversal(root) {
-  debugger;
-  let rs = [];
+function verticalTraversal(root) {
+  let nodes = new Map();
   if (!root?.value) {
-    return rs;
+    return [];
   }
-  if (root?.value) {
-    rs.push(root?.value);
-  }
-  leftTraversal(root, rs);
-  addLeaves(root, rs);
-  rightTraversal(root, rs);
-
-  console.log(rs);
-}
-
-function isLeaf(node) {
-  if (node && !node?.left && !node?.right) {
-    return true;
-  } else return false;
-}
-function leftTraversal(root, rs) {
-  let cur = root?.left;
-  while (cur) {
-    // If the current node is not a leaf, add its value to the result
-    if (!isLeaf(cur)) {
-      rs.push(cur.value);
+  let q = [];
+  q.push([root, [0, 0]]);
+  while (q?.length) {
+    let el = q.shift();
+    let [node, [vertical, level]] = el;
+    if (!nodes.has(vertical)) {
+      nodes.set(vertical, new Map());
     }
-    // Move to the left child if it exists, otherwise move to the right child
-    if (cur.left) {
-      cur = cur.left;
-    } else {
-      cur = cur.right;
+    if (!nodes.get(vertical).has(level)) {
+      nodes.get(vertical).set(level, new Set());
+    }
+    nodes.get(vertical).get(level).add(node?.value);
+
+    if (node?.left) {
+      q.push([node?.left, [vertical - 1, level + 1]]);
+    }
+    if (node?.right) {
+      q.push([node?.right, [vertical + 1, level + 1]]);
     }
   }
-}
 
-function addLeaves(root, rs) {
-  if (!root?.value) {
-    return;
-  }
-  if (isLeaf(root)) {
-    rs.push(root?.value);
-  }
-  addLeaves(root?.left, rs);
-  addLeaves(root?.right, rs);
-}
-
-function rightTraversal(root, rs) {
-  let cur = root?.right;
-  let temp = [];
-  while (cur) {
-    // If the current node is not a leaf, add its value to the result
-    if (!isLeaf(cur)) {
-      temp.push(cur.value);
+  const ans = [];
+  for ([key, value] of nodes) {
+    let col = [];
+    for ([subKey, subVal] of value) {
+      col.push(...subVal);
     }
-    // Move to the left child if it exists, otherwise move to the right child
-    if (cur?.right) {
-      cur = cur.right;
-    } else {
-      cur = cur?.left;
-    }
+    ans.push(col);
   }
-  rs.push(...temp.reverse());
+
+  return ans;
 }
 
-console.log("sdsd");
-boundaryTraversal(n1);
+console.log(verticalTraversal(n1));
