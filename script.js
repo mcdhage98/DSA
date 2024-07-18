@@ -41,42 +41,35 @@ n4.setRight(n9);
 n5.setLeft(n10);
 n5.setRight(n11);
 
-function verticalTraversal(root) {
-  let nodes = new Map();
+function topView(root) {
+  let res = new Map();
   if (!root?.value) {
     return [];
   }
   let q = [];
-  q.push([root, [0, 0]]);
-  while (q?.length) {
+  if (root?.value) {
+    q.push([root, 0]);
+  }
+  while (q.length) {
     let el = q.shift();
-    let [node, [vertical, level]] = el;
-    if (!nodes.has(vertical)) {
-      nodes.set(vertical, new Map());
+    let [node, vertical] = el;
+    if (!res.has(vertical)) {
+      res.set(vertical, node?.value);
     }
-    if (!nodes.get(vertical).has(level)) {
-      nodes.get(vertical).set(level, new Set());
-    }
-    nodes.get(vertical).get(level).add(node?.value);
-
     if (node?.left) {
-      q.push([node?.left, [vertical - 1, level + 1]]);
+      q.push([node?.left, vertical - 1]);
     }
     if (node?.right) {
-      q.push([node?.right, [vertical + 1, level + 1]]);
+      q.push([node?.right, vertical + 1]);
     }
   }
-
-  const ans = [];
-  for ([key, value] of nodes) {
-    let col = [];
-    for ([subKey, subVal] of value) {
-      col.push(...subVal);
-    }
-    ans.push(col);
+  let keys = [...res.keys()].sort((a, b) => a - b);
+  let ans = [];
+  for (let key of keys) {
+    ans.push(res.get(key));
   }
 
   return ans;
 }
 
-console.log(verticalTraversal(n1));
+console.log(topView(n1));
