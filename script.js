@@ -1,6 +1,6 @@
 /*
-use recursive  preorder if right view
-Root,left, right
+symmetrical if the left tree is mirror opposite of right tree
+check striver website for more info
 
 */
 class Node {
@@ -18,7 +18,7 @@ class Node {
   }
 }
 
-let n1 = new Node(1);
+/*let n1 = new Node(1);
 let n2 = new Node(2);
 let n3 = new Node(3);
 let n4 = new Node(4);
@@ -44,18 +44,32 @@ n4.setRight(n9);
 
 n5.setLeft(n10);
 n5.setRight(n11);
+*/
 
-function leftView(root, level, res) {
-  if (!root?.value) {
-    return;
+let n1 = new Node(1);
+let n2 = new Node(2);
+let n3 = new Node(2);
+n1.setLeft(n2);
+n1.setRight(n3);
+
+function isSymmetric(leftNode, rightNode) {
+  if (!leftNode?.value && !rightNode?.value) {
+    return true;
   }
-  if (level == res.length) {
-    res.push(root?.value);
+  if (leftNode?.value != rightNode?.value) {
+    return false;
   }
-  leftView(root?.left, level + 1, res);
-  leftView(root?.right, level + 1, res);
+  return (
+    isSymmetric(leftNode?.left, rightNode?.right) &&
+    isSymmetric(leftNode?.right, rightNode?.left)
+  );
 }
 
-let res = [];
-console.log(leftView(n1, 0, res));
-console.log("left view", res);
+function init(root) {
+  if (!root?.value) {
+    return true;
+  }
+  return isSymmetric(root?.left, root?.right);
+}
+
+console.log(init(n1));
