@@ -1,8 +1,3 @@
-/*
-symmetrical if the left tree is mirror opposite of right tree
-check striver website for more info
-
-*/
 class Node {
   constructor(value) {
     this.value = value;
@@ -18,7 +13,7 @@ class Node {
   }
 }
 
-/*let n1 = new Node(1);
+let n1 = new Node(1);
 let n2 = new Node(2);
 let n3 = new Node(3);
 let n4 = new Node(4);
@@ -44,32 +39,32 @@ n4.setRight(n9);
 
 n5.setLeft(n10);
 n5.setRight(n11);
-*/
 
-let n1 = new Node(1);
-let n2 = new Node(2);
-let n3 = new Node(2);
-n1.setLeft(n2);
-n1.setRight(n3);
-
-function isSymmetric(leftNode, rightNode) {
-  if (!leftNode?.value && !rightNode?.value) {
-    return true;
+function findRootToNodePath(source, destination) {
+  let arr = [];
+  if (!source?.value) {
+    return arr;
   }
-  if (leftNode?.value != rightNode?.value) {
+  if (find(source, destination, arr)) {
+    return arr;
+  }
+}
+
+function find(source, destination, arr) {
+  if (!source?.value) {
     return false;
   }
-  return (
-    isSymmetric(leftNode?.left, rightNode?.right) &&
-    isSymmetric(leftNode?.right, rightNode?.left)
-  );
-}
-
-function init(root) {
-  if (!root?.value) {
+  arr.unshift(source?.value);
+  if (source?.value == destination?.value) {
     return true;
   }
-  return isSymmetric(root?.left, root?.right);
+  if (
+    find(source?.left, destination, arr) ||
+    find(source?.right, destination, arr)
+  ) {
+    return true;
+  }
+  arr.shift();
 }
 
-console.log(init(n1));
+console.log(findRootToNodePath(n1, n11));
