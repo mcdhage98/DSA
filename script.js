@@ -13,19 +13,19 @@ class Node {
   }
 }
 
-let n1 = new Node(1);
-let n2 = new Node(2);
-let n3 = new Node(3);
-let n4 = new Node(4);
-let n5 = new Node(5);
-let n6 = new Node(6);
-let n7 = new Node(7);
+let n1 = new Node(0);
+let n2 = new Node(20);
+let n3 = new Node(300);
+let n4 = new Node(40);
+let n5 = new Node(500);
+let n6 = new Node(600);
+let n7 = new Node(70);
 let n8 = new Node(8);
-let n9 = new Node(9);
-let n10 = new Node(10);
-let n11 = new Node(11);
-let n12 = new Node(12);
-let n13 = new Node(13);
+let n9 = new Node(90);
+let n10 = new Node(1000);
+let n11 = new Node(110);
+let n12 = new Node(1200);
+let n13 = new Node(130);
 
 n1.setLeft(n2);
 n1.setRight(n3);
@@ -45,39 +45,63 @@ n5.setRight(n11);
 n6.setLeft(n12);
 n6.setRight(n13);
 
-function widthOfBinaryTree(root) {
-  debugger;
-  if (!root) {
-    return 0;
+function printArray(arr) {
+  // Iterate through the
+  // array and print each element
+  for (let num of arr) {
+    console.log(num + " ");
   }
-  let ans = 0;
+  console.log("\n");
+}
+
+function childrenSumProperty(root) {
+  if (!root) {
+    return;
+  }
+  if (root?.left && root?.left?.value < root?.value) {
+    root.left.value = root?.value;
+  }
+  if (root?.right && root?.right?.value < root?.value) {
+    root.right.value = root?.value;
+  }
+  childrenSumProperty(root?.left);
+  childrenSumProperty(root?.right);
+
+  if (
+    root?.left?.value &&
+    root?.right?.value &&
+    root?.left?.value + root?.right?.value > root?.value
+  ) {
+    root.value = root?.left?.value + root?.right?.value;
+  }
+}
+
+function solution(root) {
+  if (root?.value == null) {
+    return;
+  }
   let q = [];
-  q.push({ node: root, position: 0 });
-  while (q.length) {
+  q.push(root);
+  let ans = [];
+  while (q.length > 0) {
+    let level = [];
     let size = q.length;
-    let mmin = q[0].position;
-    let leftIndex, rightIndex;
-    for (i = 0; i < size; i++) {
-      let curIndex = q[0].position - mmin;
-      if (i == 0) {
-        leftIndex = q[0].position;
+
+    for (let i = 0; i < size; i++) {
+      let el = q.shift();
+      level.push(el.value);
+      if (el?.left) {
+        q.push(el.left);
       }
-      if (i == size - 1) {
-        rightIndex = q[0].position;
-      }
-      let popped = q.shift();
-      if (popped?.node?.left) {
-        q.push({ node: popped?.node?.left, position: curIndex * 2 + 1 });
-      }
-      if (popped?.node?.right) {
-        q.push({ node: popped?.node?.right, position: curIndex * 2 + 2 });
+      if (el?.right) {
+        q.push(el.right);
       }
     }
-    let width = rightIndex - leftIndex + 1;
-    ans = Math.max(ans, width);
+    ans.push(level);
   }
   return ans;
 }
-let maxWidth = widthOfBinaryTree(n1);
 
-console.log("Maximum width of the binary tree is: " + maxWidth);
+childrenSumProperty(n1);
+let ans = solution(n1);
+printArray(ans);
