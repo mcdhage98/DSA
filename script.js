@@ -13,19 +13,19 @@ class Node {
   }
 }
 
-let n1 = new Node(0);
-let n2 = new Node(20);
-let n3 = new Node(300);
-let n4 = new Node(40);
-let n5 = new Node(500);
-let n6 = new Node(600);
-let n7 = new Node(70);
+let n1 = new Node(1);
+let n2 = new Node(2);
+let n3 = new Node(3);
+let n4 = new Node(4);
+let n5 = new Node(5);
+let n6 = new Node(6);
+let n7 = new Node(7);
 let n8 = new Node(8);
-let n9 = new Node(90);
-let n10 = new Node(1000);
-let n11 = new Node(110);
-let n12 = new Node(1200);
-let n13 = new Node(130);
+let n9 = new Node(9);
+let n10 = new Node(10);
+let n11 = new Node(11);
+let n12 = new Node(12);
+let n13 = new Node(13);
 
 n1.setLeft(n2);
 n1.setRight(n3);
@@ -45,63 +45,63 @@ n5.setRight(n11);
 n6.setLeft(n12);
 n6.setRight(n13);
 
-function printArray(arr) {
-  // Iterate through the
-  // array and print each element
-  for (let num of arr) {
-    console.log(num + " ");
+
+function parentTrackFunction(parentTrack, root) {
+  let q = [];
+  q.push(root);
+  while (q.length) {
+    let size = q.length;
+    for (let i = 0; i < size; i++) {
+      let current = q.shift();
+      if (current?.left) {
+        parentTrack.set(current?.left, current);
+        q.push(current.left);
+      }
+      if (current?.right) {
+        parentTrack.set(current?.right, current);
+        q.push(current.right);
+      }
+    }
   }
-  console.log("\n");
 }
 
-function childrenSumProperty(root) {
+function Solution(root, target, k) {
   if (!root) {
     return;
   }
-  if (root?.left && root?.left?.value < root?.value) {
-    root.left.value = root?.value;
-  }
-  if (root?.right && root?.right?.value < root?.value) {
-    root.right.value = root?.value;
-  }
-  childrenSumProperty(root?.left);
-  childrenSumProperty(root?.right);
-
-  if (
-    root?.left?.value &&
-    root?.right?.value &&
-    root?.left?.value + root?.right?.value > root?.value
-  ) {
-    root.value = root?.left?.value + root?.right?.value;
-  }
-}
-
-function solution(root) {
-  if (root?.value == null) {
-    return;
-  }
+  let parentTrack = new Map();
+  let visited = new Map();
+  parentTrackFunction(parentTrack, root);
+  let level = 0;
   let q = [];
-  q.push(root);
-  let ans = [];
-  while (q.length > 0) {
-    let level = [];
+  q.push(target);
+  visited.set(target, true);
+  while (q.length) {
+    if (level++ == k) {
+      break;
+    }
     let size = q.length;
-
     for (let i = 0; i < size; i++) {
-      let el = q.shift();
-      level.push(el.value);
-      if (el?.left) {
-        q.push(el.left);
+      let cur = q.shift();
+      if (cur?.left && !visited.get(cur?.left)) {
+        q.push(cur.left);
+        visited.set(cur.left, true);
       }
-      if (el?.right) {
-        q.push(el.right);
+      if (cur?.right && !visited.get(cur?.right)) {
+        q.push(cur.right);
+        visited.set(cur.right, true);
+      }
+
+      if (parentTrack.get(cur) && !visited.get(parentTrack.get(cur))) {
+        q.push(parentTrack.get(cur));
+        visited.set(parentTrack.get(cur), true);
       }
     }
-    ans.push(level);
   }
-  return ans;
+  console.log("ans", q);
 }
 
-childrenSumProperty(n1);
-let ans = solution(n1);
-printArray(ans);
+let root = n1;
+let target = n5;
+let k = 2;
+Solution(root, target, k);
