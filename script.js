@@ -1,3 +1,5 @@
+//https://takeuforward.org/binary-tree/print-nodes-at-distance-k-in-a-binary-tree/
+// tc o(n) sc o(n)
 class Node {
   constructor(value) {
     this.value = value;
@@ -36,72 +38,69 @@ n2.setRight(n5);
 n3.setLeft(n6);
 n3.setRight(n7);
 
-n4.setLeft(n8);
-n4.setRight(n9);
-
-n5.setLeft(n10);
-n5.setRight(n11);
-
-n6.setLeft(n12);
-n6.setRight(n13);
-
-
-function parentTrackFunction(parentTrack, root) {
+function parentTrackerFn(root, start, parentTracker) {
   let q = [];
   q.push(root);
+  let startNode;
   while (q.length) {
-    let size = q.length;
-    for (let i = 0; i < size; i++) {
-      let current = q.shift();
-      if (current?.left) {
-        parentTrack.set(current?.left, current);
-        q.push(current.left);
-      }
-      if (current?.right) {
-        parentTrack.set(current?.right, current);
-        q.push(current.right);
-      }
-    }
-  }
-}
-
-function Solution(root, target, k) {
-  if (!root) {
-    return;
-  }
-  let parentTrack = new Map();
-  let visited = new Map();
-  parentTrackFunction(parentTrack, root);
-  let level = 0;
-  let q = [];
-  q.push(target);
-  visited.set(target, true);
-  while (q.length) {
-    if (level++ == k) {
-      break;
-    }
     let size = q.length;
     for (let i = 0; i < size; i++) {
       let cur = q.shift();
-      if (cur?.left && !visited.get(cur?.left)) {
+      if (cur?.value == start) {
+        startNode = cur;
+      }
+      if (cur?.left) {
+        parentTracker.set(cur?.left, cur);
         q.push(cur.left);
-        visited.set(cur.left, true);
       }
-      if (cur?.right && !visited.get(cur?.right)) {
+      if (cur?.right) {
+        parentTracker.set(cur?.right, cur);
         q.push(cur.right);
-        visited.set(cur.right, true);
-      }
-
-      if (parentTrack.get(cur) && !visited.get(parentTrack.get(cur))) {
-        q.push(parentTrack.get(cur));
-        visited.set(parentTrack.get(cur), true);
       }
     }
   }
-  console.log("ans", q);
+  return startNode;
+}
+
+function Solution(root, start) {
+  if (!root) {
+    return 0;
+  }
+  let parentTracker = new Map();
+  let startNode = parentTrackerFn(root, start, parentTracker);
+  let time = 0;
+  let q = [];
+  q.push(startNode);
+  let visited = new Map();
+  visited.set(startNode, true);
+  while (q.length) {
+    let size = q.length;
+    let burnt = false;
+    for (let i = 0; i < size; i++) {
+      let cur = q.shift();
+      if (cur?.left && !visited.get(cur?.left)) {
+        burnt = true;
+        visited.set(cur.left, true);
+        q.push(cur.left);
+      }
+      if (cur?.right && !visited.get(cur?.right)) {
+        burnt = true;
+        visited.set(cur.right, true);
+        q.push(cur.right);
+      }
+      if (parentTracker.get(cur) && !visited.get(parentTracker.get(cur))) {
+        burnt = true;
+        visited.set(parentTracker.get(cur));
+        q.push(parentTracker.get(cur));
+      }
+    }
+    if (burnt) {
+      time++;
+    }
+  }
+  return time;
 }
 
 let root = n1;
-let target = n5;
-let k = 2;
-Solution(root, target, k);
+let start = 3;
+console.log(Solution(root, start));
