@@ -1,5 +1,5 @@
-//https://takeuforward.org/binary-tree/print-nodes-at-distance-k-in-a-binary-tree/
-// tc o(n) sc o(n)
+// tc o(logn)square
+//sc logn
 class Node {
   constructor(value) {
     this.value = value;
@@ -38,69 +38,40 @@ n2.setRight(n5);
 n3.setLeft(n6);
 n3.setRight(n7);
 
-function parentTrackerFn(root, start, parentTracker) {
-  let q = [];
-  q.push(root);
-  let startNode;
-  while (q.length) {
-    let size = q.length;
-    for (let i = 0; i < size; i++) {
-      let cur = q.shift();
-      if (cur?.value == start) {
-        startNode = cur;
-      }
-      if (cur?.left) {
-        parentTracker.set(cur?.left, cur);
-        q.push(cur.left);
-      }
-      if (cur?.right) {
-        parentTracker.set(cur?.right, cur);
-        q.push(cur.right);
-      }
-    }
-  }
-  return startNode;
-}
+n4.setLeft(n8);
+n4.setRight(n9);
 
-function Solution(root, start) {
+n5.setLeft(n10);
+n5.setRight(n11);
+
+function countTotal(root) {
   if (!root) {
     return 0;
   }
-  let parentTracker = new Map();
-  let startNode = parentTrackerFn(root, start, parentTracker);
-  let time = 0;
-  let q = [];
-  q.push(startNode);
-  let visited = new Map();
-  visited.set(startNode, true);
-  while (q.length) {
-    let size = q.length;
-    let burnt = false;
-    for (let i = 0; i < size; i++) {
-      let cur = q.shift();
-      if (cur?.left && !visited.get(cur?.left)) {
-        burnt = true;
-        visited.set(cur.left, true);
-        q.push(cur.left);
-      }
-      if (cur?.right && !visited.get(cur?.right)) {
-        burnt = true;
-        visited.set(cur.right, true);
-        q.push(cur.right);
-      }
-      if (parentTracker.get(cur) && !visited.get(parentTracker.get(cur))) {
-        burnt = true;
-        visited.set(parentTracker.get(cur));
-        q.push(parentTracker.get(cur));
-      }
-    }
-    if (burnt) {
-      time++;
-    }
-  }
-  return time;
+  let leftHt = findLeftHeight(root);
+  let rightHt = findRightHeight(root);
+
+  if (leftHt == rightHt) {
+    return Math.pow(2, leftHt) - 1;
+  } else return 1 + countTotal(root?.left) + countTotal(root?.right);
 }
 
-let root = n1;
-let start = 3;
-console.log(Solution(root, start));
+function findLeftHeight(root) {
+  let ht = 1;
+  while (root?.left) {
+    root = root?.left;
+    ht++;
+  }
+  return ht;
+}
+
+function findRightHeight(root) {
+  let ht = 1;
+  while (root?.right) {
+    root = root?.right;
+    ht++;
+  }
+  return ht;
+}
+
+console.log(countTotal(n1));
