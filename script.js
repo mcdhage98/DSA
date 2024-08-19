@@ -13,75 +13,91 @@ class Node {
   }
 }
 
-function construct(postorder, inorder) {
-  let inMap = new Map();
-  inorder.forEach((element, index) => {
-    inMap.set(element, index);
-  });
-  let root = constructBt(
-    postorder,
-    0,
-    postorder.length - 1,
-    inorder,
-    0,
-    inorder.length - 1,
-    inMap
-  );
-  return root;
-}
+let n1 = new Node(1);
+let n2 = new Node(2);
+let n3 = new Node(3);
+let n4 = new Node(4);
+let n5 = new Node(5);
+let n6 = new Node(6);
+let n7 = new Node(7);
+let n8 = new Node(8);
+let n9 = new Node(9);
+let n10 = new Node(10);
+let n11 = new Node(11);
 
-function constructBt(
-  postorder,
-  postStart,
-  postEnd,
-  inorder,
-  inStart,
-  inEnd,
-  inMap
-) {
-  if (postStart > postEnd || inStart > inEnd) {
-    return;
-  }
-  let inRoot = inMap.get(postorder[postEnd]);
-  let numsLeft = inRoot - inStart;
+n1.setLeft(n2);
+n1.setRight(n3);
 
-  let root = new Node(postorder[postEnd]);
-  root.setLeft(
-    constructBt(
-      postorder,
-      postStart,
-      postStart + numsLeft - 1,
-      inorder,
-      inStart,
-      inRoot - 1,
-      inMap
-    )
-  );
+n2.setLeft(n4);
+n2.setRight(n5);
 
-  root.setRight(
-    constructBt(
-      postorder,
-      postStart + numsLeft,
-      postEnd - 1,
-      inorder,
-      inRoot + 1,
-      inEnd,
-      inMap
-    )
-  );
+n3.setLeft(n6);
+n3.setRight(n7);
 
-  return root;
-}
+n4.setLeft(n8);
+n4.setRight(n9);
 
-//let ans = construct([4, 2, 3, 1], [4, 2, 1, 3]);
-let ans = construct([40, 50, 20, 60, 30, 10], [40, 20, 50, 10, 60, 30]);
-postorder(ans);
+n5.setLeft(n10);
+n5.setRight(n11);
 
-function postorder(root) {
+function serialize(root) {
   if (!root) {
-    return;
+    return null;
   }
-  postorder(root?.left);
-  postorder(root?.right);
-  console.log(root.value);
+  let q = [];
+  q.push(root);
+  let res = `${root.value}`;
+  while (q.length) {
+    let size = q.length;
+    for (let i = 0; i < size; i++) {
+      let cur = q.shift();
+      if (cur?.left && cur?.left?.value) {
+        res = `${res},${cur.left.value}`;
+        q.push(cur?.left);
+      } else {
+        res = `${res},#`;
+      }
+      if (cur?.right && cur?.right?.value) {
+        res = `${res},${cur.right.value}`;
+        q.push(cur?.right);
+      } else {
+        res = `${res},#`;
+      }
+    }
+  }
+  return res;
 }
+
+function deserialize(str) {
+  if (!str && str == "#") {
+    return null;
+  }
+  let s = str.split(",");
+  let rootVal = s.shift();
+
+  let q = [];
+  let root = new Node(parseInt(rootVal));
+  q.push(root);
+
+  while (q.length) {
+    let node = q.shift();
+    let leftVal = s.shift();
+    if (leftVal != "#") {
+      let leftNode = new Node(parseInt(leftVal));
+      node.left = leftNode;
+      q.push(leftNode);
+    }
+    let rightVal = s.shift();
+    if (rightVal != "#") {
+      let rightNode = new Node(parseInt(rightVal));
+      node.right = rightNode;
+      q.push(rightNode);
+    }
+  }
+  return root;
+}
+
+let string = serialize(n1);
+console.log(string);
+let root = deserialize(string);
+console.log(serialize(root));
